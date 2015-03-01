@@ -1,0 +1,37 @@
+{
+	"build": {
+		"src":"./src",
+		"build":"./build",
+		"bin":"./bin",
+		"dir":{
+			"less":"less",
+			"css":"css",
+			"build":"build",
+			"bin":"bin"
+		},
+		"pattern":{
+			"allSubDirs": "/**",
+			"ts": "*.ts",
+			"less": "*.less",
+			"ejs": "*.ejs",
+			"js": "*.js",
+			"cfg": "*.json",
+			"test": "*.test.js"
+		},
+		"task":{
+			"static":{
+				"src":[]
+			},
+			"browserify":{
+				"main":"app.js"
+			},
+			"ejs":{
+				"viewDir":"/"
+			},
+			"inject":{
+				"target":"/index.html",
+				"viewDir":"/"
+			}
+		}
+	}
+}

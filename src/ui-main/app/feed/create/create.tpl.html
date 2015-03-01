@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form name="postingCreateForm" class="create-posting-form">
+      <div class="form-group">
+        <textarea class="form-control input-lg" rows="3" data-ng-model="feedPosting.message" maxlength="{{vm.getPostingCharLimit()}}" placeholder="Your message for the world"></textarea>
+      </div>
+      <span class="badge badge-info" data-ng-bind="vm.getRemainingCharCount(feedPosting)"></span>
+      <button type="submit" class="btn btn-success btn-lg pull-right"><i class="fa fa-paper-plane-o"></i> Send your posting</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+{
+	"build": {
+		"task":{
+			"static":{
+				"src":[
+					"/**/*.tpl.html"
+				]
+			}
+		}
+	}
+}

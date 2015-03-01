@@ -1,0 +1,15 @@
+<div id="login-form">
+  <form name="loginForm">
+    <h2 class="form-login-heading">Login</h2>
+    <div class="alert alert-danger" role="alert" data-ng-show="loginState == 2">Login failed!</div>
+    <div class="form-group">
+      <label class="control-label" for="username">username address</label>
+      <input data-ng-model="user.username" type="text" name="username" id="input-username" class="form-control input-lg" placeholder="Username" required="" autofocus="">
+    </div>
+    <div class="form-group">
+      <label class="control-label" for="password">Password</label>
+      <input data-ng-model="user.password" type="password" name="password" id="input-password" class="form-control input-lg" placeholder="Password" required="">
+    </div>
+    <button data-ng-click="vm.onClickLogin(loginForm, user)" class="btn btn-lg btn-success btn-block" type="submit">Login</button>
+  </form>
+</div>
