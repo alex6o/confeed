@@ -1,8 +1,9 @@
 /// <reference path="create.d.ts"/>
-
 require("angular");
 require("angular-ui-router");
 require("lodash");
+
+import DTOImpl = require("common/dto/dto");
 
 "use strict";
 
@@ -12,12 +13,14 @@ export class FeedCreateCtrl implements cf.IBaseController {
     public static $inject = [
         "$scope",
         "$state",
-        "$stateParams"
+        "$stateParams",
+        "cf_feedService"
     ];
     constructor(
         private $scope: cf.IFeedCreateScope,
         private $state: any,
-        private $stateParams: any
+        private $stateParams: any,
+        private feedService: cf.IFeedService
         ) {
         // set view model
         this.$scope.vm = this;
@@ -32,6 +35,16 @@ export class FeedCreateCtrl implements cf.IBaseController {
     }
     public getPostingCharLimit(): number {
         return FeedCreateCtrl.MAX_POSTING_CHARS;
+    }
+
+    public onClickSendFeedPosting(feedPosting:DTO.IFeedPosting):void {
+        this.feedService.sendFeedPosting(feedPosting).then((result:DTO.IFeedPosting)=>{
+                // success handling
+                this.$scope.feedPosting = new DTOImpl.FeedPosting();
+            },(err)=>{
+                // error handling goes here
+                console.error(err);
+            });
     }
 }
 

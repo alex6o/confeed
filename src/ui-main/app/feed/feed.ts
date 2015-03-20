@@ -12,7 +12,7 @@ require("common/ui/validation/validation");
 require("common/ui/format/format");
 require("./create/create");
 
-import User = require("common/user/user");
+import UserImpl = require("common/user/user");
 
 "use strict";
 
@@ -74,6 +74,7 @@ class FeedCtrl implements cf.IBaseController {
         private userService: any,
         private feedService: cf.IFeedService
         ) {
+
         // init timestamp
         this.refTimestamp = new Date();
         this.fetchLimit = FeedCtrl.DEFAULT_FETCH_LIMIT;
@@ -111,12 +112,44 @@ class FeedCtrl implements cf.IBaseController {
             });
     }
 
+    public togglePostingLimit(){
+        if(this.postingLimit == 0){
+            this.postingLimit = FeedCtrl.DEFAULT_POSTING_LIMIT;
+        }else if(this.postingLimit > 0){
+            this.postingLimit = 0;
+        }
+        console.log("posting limit set to %d",this.postingLimit);
+    }
 
     public onClickLogout(): void {
         this.userService.logout();
         this.$state.go("login");
     }
+
+    public getPostingLimit():number{
+        return this.postingLimit;
+    }
+
+    public onClickLoadMore():void{
+        this.postingLimit = 0;
+
+        if(!_.isEmpty(this.$scope.feedPostings)){
+            this.feedService.getOlderFeedPostings(_.last(this.$scope.feedPostings)).then(
+                (result: DTO.ISearchResult<DTO.IFeedPosting>) => {
+                    if (!_.isEmpty(result.entities)) {
+                        _(result.entities).forEach((entry: DTO.IFeedPosting) => {
+                            this.$scope.feedPostings.push(entry);
+                        }).value();
+                    }
+                },
+                (result: restangular.IResponse) => {
+                    console.error("Error while fetching posts " + result.data);
+                    // handle error
+                });
+        }
+    }
 }
+
 
 
 function feedBlockAnimation() {
@@ -157,7 +190,7 @@ var angularModule = angular.module("cf.feed", moduleDependencies)
                 parent: "app",
                 url: "/feed",
                 resolve: {
-                    currentUser: User.loginRequired
+                    currentUser: UserImpl.loginRequired
                 },
                 views: {
                     "content-container@app": {

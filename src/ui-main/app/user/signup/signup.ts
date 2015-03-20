@@ -5,7 +5,8 @@ require("angular-ui-router");
 
 require("common/ui/validation/validation");
 
-import User = require("common/user/user");
+import UserImpl = require("common/user/user");
+import DTOImpl = require("common/dto/dto");
 
 "use strict";
 
@@ -26,14 +27,14 @@ export class SignupCtrl implements cf.IBaseController {
     constructor(
         private $scope: cf.ISignupScope,
         private $state,
-        private userService: User.UserService,
-        private userTargetStateService: User.UserTargetStateService
+        private userService: UserImpl.UserService,
+        private userTargetStateService: UserImpl.UserTargetStateService
         ) {
         // set view model
         this.$scope.vm = this;
         this.$scope.errorMessages = {};
         this.$scope.signupState = SignupStateEnum.INPUT;
-        this.$scope.user = { username: "", password: "" };
+        this.$scope.user = new DTOImpl.RegisterUser();
     }
 
     public onClickSubmit(form: ng.IFormController, user: DTO.IRegisterUser): void {

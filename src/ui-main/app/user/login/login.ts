@@ -5,7 +5,7 @@ require("angular-ui-router");
 
 require("common/ui/validation/validation");
 
-import User = require("common/user/user");
+import UserImpl = require("common/user/user");
 
 "use strict";
 
@@ -26,12 +26,11 @@ class LoginCtrl implements cf.IBaseController {
     constructor(
         private $scope: cf.ILoginScope,
         private $state: any,
-        private userService: User.UserService,
-        private userTargetStateService: User.UserTargetStateService
+        private userService: UserImpl.UserService,
+        private userTargetStateService: UserImpl.UserTargetStateService
         ) {
         // set view model
         this.$scope.vm = this;
-        console.log("login ctrl");
     }
 
     public onClickLogin(form: ng.IFormController, user: DTO.ILoginUser): void {

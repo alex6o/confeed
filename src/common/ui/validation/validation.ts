@@ -4,7 +4,7 @@ require("lodash");
 require("angular");
 require("jquery");
 require("restangular");
-import User = require("common/user/user");
+import UserImpl = require("common/user/user");
 
 "use strict";
 
@@ -27,7 +27,7 @@ function processAsyncErrorMessages(scope, error, fieldName: string, resolve, rej
 export function asyncFieldValidationDirective(
     $q,
     restangular,
-    userService: User.UserService): ng.IDirective {
+    userService: UserImpl.UserService): ng.IDirective {
 
     return {
         require: 'ngModel',

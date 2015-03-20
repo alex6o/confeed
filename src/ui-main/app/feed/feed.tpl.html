@@ -1,34 +1,45 @@
 <div class="row">
-  <div class="col-xs-12">
-    <p class="welcome-message">
-        Hello <span class="username" data-ng-bind="currentUser.username"></span>!
-        <a href="#" data-ng-click="vm.onClickLogout()">Logout</a>
-    </p>
-  </div>
+    <div class="col-xs-12">
+        <p class="welcome-message">
+            Hello
+            <span class="username" data-ng-bind="currentUser.username"></span>!
+            <a class="badge badge-info" href="#" data-ng-click="vm.onClickLogout()">Logout</a>
+            <a class="badge badge-info"
+                data-ng-class="{'badge-warning': vm.getPostingLimit() === 0}"
+                href="#"
+                data-ng-click="vm.togglePostingLimit()">
+            <span data-ng-show="vm.getPostingLimit() > 0" data-ng-bind="vm.getPostingLimit() + ' Postings'"></span>
+            <span data-ng-show="vm.getPostingLimit() === 0">No limit</span>
+        </a>
+        </p>
+    </div>
 </div>
 <div class="row">
-  <div class="col-xs-12">
-    <div data-ui-view="create-posting"/>
-  </div>
+    <div class="col-xs-12">
+        <div data-ui-view="create-posting" />
+    </div>
 </div>
 <div class="row">
-  <div class="col-xs-12">
-    <section id="timeline">
-    	<div class="timeline-block feed-posting" data-ng-repeat="posting in feedPostings">
-    		<div class="timline-user">
-          <span data-ng-bind="posting.user.username"></span>
+    <div class="col-xs-12">
+        <section id="timeline">
+            <div class="timeline-block feed-posting" data-ng-repeat="posting in feedPostings">
+                <div class="timline-user">
+                    <span data-ng-bind="posting.user.username"></span>
+                </div>
+                <div class="timeline-img">
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-message">
+                        <p data-ng-bind="posting.message"></p>
+                    </div>
+                    <div class="timeline-posting-date">
+                        <span class="date" data-cf-update-filter="posting.created" data-filter-name="'cfTimeFromNow'"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div id="load-more" data-ng-show="feedPostings.length > 0">
+            <a class="heading" href="#" data-ng-click="vm.onClickLoadMore()">Load more ...</a>
         </div>
-        <div class="timeline-img">
-    		</div>
-    		<div class="timeline-content">
-          <div class="timeline-message">
-            <p data-ng-bind="posting.message"></p>
-          </div>
-          <div class="timeline-posting-date">
-            <span class="date" data-cf-update-filter="posting.created" data-filter-name="'cfTimeFromNow'"></span>
-          </div>
-    		</div>
-    	</div>
-    </section>
-  </div>
+    </div>
 </div>
