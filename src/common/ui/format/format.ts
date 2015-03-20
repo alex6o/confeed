@@ -9,39 +9,39 @@ var moment = require("moment");
 "use strict";
 
 export function continousFilterUpdateDirective(
-  $interval: ng.IIntervalService,
-  $filter: ng.IFilterService): ng.IDirective {
+    $interval: ng.IIntervalService,
+    $filter: ng.IFilterService): ng.IDirective {
 
   return {
-    scope: {
-      filterName: "=",
-      model: "=cfUpdateFilter"
-    },
-    link: (scope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes, ctrl) => {
-      var updateInterval = 1000 * 30;
-      var interval = undefined;
+        scope: {
+            filterName: "=",
+            model: "=cfUpdateFilter"
+        },
+        link: (scope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes, ctrl) => {
+            var updateInterval = 1000 * 30;
+            var interval = undefined;
 
-      function updateFilter() {
-        var filter =  $filter(scope.filterName);
-        element.text(filter(scope.model));
-      }
+            function updateFilter() {
+                var filter = $filter(scope.filterName);
+                element.text(filter(scope.model));
+            }
 
-      interval = $interval(updateFilter, updateInterval);
-      updateFilter();
+            interval = $interval(updateFilter, updateInterval);
+            updateFilter();
 
-      element.bind('$destroy', function() {
-        $interval.cancel(interval);
-      });
+            element.bind('$destroy', function() {
+                $interval.cancel(interval);
+            });
+        }
     }
-  }
 }
 continousFilterUpdateDirective.$inject = ["$interval", "$filter"];
 
 
 function timeFromNowFilter() {
-  return (input): string => {
-    return moment(input).fromNow();
-  };
+    return (input): string => {
+        return moment(input).fromNow();
+    };
 }
 
 /**
@@ -58,6 +58,6 @@ var angularModule = angular.module("cf.common.ui.format", moduleDependencies)
 // Controller
 // Services
 // Directives
-  .directive("cfUpdateFilter", continousFilterUpdateDirective)
-  .filter("cfTimeFromNow", timeFromNowFilter);
+    .directive("cfUpdateFilter", continousFilterUpdateDirective)
+    .filter("cfTimeFromNow", timeFromNowFilter);
 // Config

@@ -17,14 +17,3 @@ gulp.task('ui:watch', ['ui:build'], function(callback) {
 	gulp.watch(lessSrc, ['less:build']);
 
 });
-
-
-gulp.task('server:watch', ['server:build'], function(callback) {
-	var staticSrc = [];
-    var tsSrc = path.join(cfg.src, cfg.context, cfg.pattern.allSubDirs,cfg.pattern.ts);
-
-	_(cfg.task.static.src).forEach(function(elem) { staticSrc.push(path.join(cfg.src, cfg.context, elem));}).value();
-
-	gulp.watch(staticSrc, ['static:copy']);
-	gulp.watch(tsSrc, ['server:build']);
-});

@@ -1,110 +1,106 @@
-.logo{
-  text-align: center;
-  margin: 30px auto;
-  font-size: 100px;
-  /* text-transform: uppercase; */
-  color: @brand-success;
-  font-family: @font-oswald;
-  font-weight: bold;
-  text-shadow: 4px 4px 0px #eee, 7px 7px 0px darken(@brand-success,5%);
+.logo {
+    text-align: center;
+    margin: 30px auto;
+    font-size: 100px;
+    /* text-transform: uppercase; */
+    color: @brand-success;
+    font-family: @font-oswald;
+    font-weight: bold;
+    text-shadow: 4px 4px 0 #eee, 7px 7px 0 darken(@brand-success,5%);
 }
-
-.welcome-message{
-  color:@gray-light;
-  font-size: 16px;
-  .username{
-    color:@brand-success;
-    font-weight:bold;
-  }
+.welcome-message {
+    color: @gray-light;
+    font-size: 16px;
+    .username {
+        color: @brand-success;
+        font-weight: bold;
+    }
 }
-
-.create-posting-form{
-  .badge-info{
-    background:darken(@gray-lighter,10%);
-    font-family:@font-oswald;
-    color:darken(@gray-lighter,50%);
-  }
+.create-posting-form {
+    .badge-info {
+        background: darken(@gray-lighter,10%);
+        font-family: @font-oswald;
+        color: darken(@gray-lighter,50%);
+    }
 }
-
-
+.form-login-heading,
+.form-signup-heading {
+    .heading;
+    margin-bottom: 20px;
+    a {
+        font-size: 60%;
+    }
+}
 /**
  * Reference: http://codyhouse.co/gem/vertical-timeline/
  * Sebastiano Guerriero
  */
 #timeline {
-  position: relative;
-  padding: 2em 0;
-  margin-top: 2em;
-  margin-bottom: 2em;
-  display:inline-block;
+    position: relative;
+    padding: 2em 0;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    display: inline-block;
 }
 .timeline-block {
-  position: relative;
-  margin-bottom: 2em;
+    position: relative;
+    margin-bottom: 2em;
 }
 #timeline::before {
-  /* this is the vertical line */
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 218px;
-  height: 100%;
-  width: 4px;
-  background: #d7e4ed;
+    /* this is the vertical line */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 218px;
+    height: 100%;
+    width: 4px;
+    background: #d7e4ed;
 }
-
 .timeline-content {
-  margin-left:255px;
-  .timeline-message {
-    position: relative;
-    background: white;
-    padding: 1em;
-    .lh-box-shadow(0 3px 3px 0 #d7e4ed);
-    .lh-border-radius(0.25em);
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 16px;
-      right: 100%;
-      height: 0;
-      width: 0;
-      border: 7px solid transparent;
-      border-right: 7px solid white;
+    margin-left: 255px;
+    .timeline-message {
+        position: relative;
+        background: white;
+        padding: 1em;
+        .lh-box-shadow(0 3px 3px 0 #d7e4ed);
+        .lh-border-radius(0.25em);
+        &::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            right: 100%;
+            height: 0;
+            width: 0;
+            border: 7px solid transparent;
+            border-right: 7px solid white;
+        }
+        p {
+            margin: 0 0 0 @padding-large-vertical/2;
+            font-size: @font-size-large;
+        }
     }
-
-    p{
-      margin:0 0 0 @padding-large-vertical/2;
-      font-size: @font-size-large;
+    .timeline-posting-date {
+        font-size: @font-size-small;
+        color: lighten(@gray-light,20%);
+        padding-top: @padding-large-vertical;
     }
-  }
-
-  .timeline-posting-date{
-    font-size:@font-size-small;
-    color: lighten(@gray-light,20%);
-    padding-top: @padding-large-vertical;
-  }
 }
-
 .timline-user {
- position: absolute;
- font-family: @font-oswald;
- font-size: 2em;
-text-align: right;
- width: 180px;
- max-height:90px;
- overflow:hidden;
- color: lighten(@gray,10%);
- text-shadow: 0px 1px white;
-
+    .heading;
+    position: absolute;
+    font-size: 2em;
+    text-align: right;
+    width: 180px;
+    max-height: 90px;
+    overflow: hidden;
 }
 .timeline-img {
-  position: absolute;
-  top: 0;
-  left: 200px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  .lh-box-shadow(0 0 0 3px white, inset 0 2px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 4px rgba(0, 0, 0, 0.05));
-  background: @brand-success;
+    position: absolute;
+    top: 0;
+    left: 200px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    .lh-box-shadow(0 0 0 3px white, inset 0 2px 0 rgba(0, 0, 0, 0.07), 0 1px 2px 4px rgba(0, 0, 0, 0.05));
+    background: @brand-success;
 }
