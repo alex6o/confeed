@@ -31,9 +31,11 @@ class LoginCtrl implements cf.IBaseController {
         ) {
         // set view model
         this.$scope.vm = this;
+        this.$scope.error = null;
     }
 
-    public onClickLogin(form: ng.IFormController, user: DTO.ILoginUser): void {
+    public onClickLogin(form:ng.IFormController, user:DTO.ILoginUser): void {
+        this.$scope.error = null;
 
         if (form.$valid) {
             this.userService.login(user).then(
@@ -48,8 +50,7 @@ class LoginCtrl implements cf.IBaseController {
                     }
                 },
                 (err: any) => {
-                    this.$scope.loginState = LoginStateEnum.ERROR;
-                    console.log(err);
+                    this.$scope.error = err.data;
                 });
         }
     }

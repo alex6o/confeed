@@ -1,13 +1,15 @@
 <div id="login-form">
-  <form name="loginForm">
-    <h2 class="form-login-heading">Login <a data-ui-sref="signup"><i class="fa fa-angle-double-right"></i> Signup</a></h2>
-    <div class="alert alert-danger" role="alert" data-ng-show="loginState == 2">Login failed!</div>
-    <div class="form-group">
-      <input data-ng-model="user.username" type="text" name="username" id="input-username" class="form-control input-lg" placeholder="Username" required="" autofocus="">
-    </div>
-    <div class="form-group">
-      <input data-ng-model="user.password" type="password" name="password" id="input-password" class="form-control input-lg" placeholder="Password" required="">
-    </div>
-    <button data-ng-click="vm.onClickLogin(loginForm, user)" class="btn btn-lg btn-success btn-block" type="submit">Login</button>
-  </form>
+    <form name="loginForm">
+        <h2 class="form-login-heading">Login <a data-ui-sref="signup"><i class="fa fa-angle-double-right"></i> Signup</a></h2>
+        <div class="alert alert-danger" role="alert" data-ng-show="error">
+            <i class="fa fa-exclamation-circle"></i> Login failed - please check your credentials!
+        </div>
+        <div class="form-group">
+            <input data-ng-model="user.username" type="text" name="username" id="input-username" class="form-control input-lg" placeholder="Username" required="" autofocus="">
+        </div>
+        <div class="form-group">
+            <input data-ng-model="user.password" type="password" name="password" id="input-password" class="form-control input-lg" placeholder="Password" required="">
+        </div>
+        <button data-ng-click="vm.onClickLogin(loginForm, user)" class="btn btn-lg btn-success btn-block" type="submit">Login</button>
+    </form>
 </div>

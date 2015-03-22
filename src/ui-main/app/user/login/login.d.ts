@@ -3,7 +3,6 @@
 declare module cf {
   interface ILoginScope extends IBaseScope {
     user: DTO.ILoginUser;
-    loginState: number;
+    error: string;
   }
-
 }

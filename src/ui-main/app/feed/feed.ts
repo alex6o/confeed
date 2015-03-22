@@ -38,7 +38,11 @@ class FeedService implements cf.IFeedService {
     }
 
     public getOlderFeedPostings(refFeedPosting: DTO.IFeedPosting): restangular.IPromise<DTO.ISearchResult<DTO.IFeedPosting>> {
-        return this.hateoasRestangular.oneUrl(null, refFeedPosting.links["next"].href).customGET(null);
+        if(!_.isUndefined(refFeedPosting.links) && !_.isUndefined(refFeedPosting.links["next"])){
+            return this.hateoasRestangular.oneUrl(null, refFeedPosting.links["next"].href).customGET(null);
+        }else{
+            return this.$q.reject("no next link available!");
+        }
     }
 
     public sendFeedPosting(feedPost: DTO.IFeedPosting): restangular.IPromise<DTO.IFeedPosting> {
@@ -107,18 +111,18 @@ class FeedCtrl implements cf.IBaseController {
                 }
             },
             (result: restangular.IResponse) => {
-                console.error("Error while fetching posts " + result.data);
+                console.error("Error while fetching posts!");
                 // handle error
             });
     }
 
-    public togglePostingLimit(){
-        if(this.postingLimit == 0){
+    public togglePostingLimit() {
+        if (this.postingLimit == 0) {
             this.postingLimit = FeedCtrl.DEFAULT_POSTING_LIMIT;
-        }else if(this.postingLimit > 0){
+        } else if (this.postingLimit > 0) {
             this.postingLimit = 0;
         }
-        console.log("posting limit set to %d",this.postingLimit);
+        console.log("posting limit set to %d", this.postingLimit);
     }
 
     public onClickLogout(): void {
@@ -126,14 +130,15 @@ class FeedCtrl implements cf.IBaseController {
         this.$state.go("login");
     }
 
-    public getPostingLimit():number{
+    public getPostingLimit(): number {
         return this.postingLimit;
     }
 
-    public onClickLoadMore():void{
+    public onClickLoadMore(): void {
         this.postingLimit = 0;
 
-        if(!_.isEmpty(this.$scope.feedPostings)){
+        if (!_.isEmpty(this.$scope.feedPostings)) {
+
             this.feedService.getOlderFeedPostings(_.last(this.$scope.feedPostings)).then(
                 (result: DTO.ISearchResult<DTO.IFeedPosting>) => {
                     if (!_.isEmpty(result.entities)) {
@@ -143,7 +148,7 @@ class FeedCtrl implements cf.IBaseController {
                     }
                 },
                 (result: restangular.IResponse) => {
-                    console.error("Error while fetching posts " + result.data);
+                    console.error("Error while fetching posts!");
                     // handle error
                 });
         }

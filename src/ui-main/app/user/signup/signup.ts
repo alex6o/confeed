@@ -10,12 +10,6 @@ import DTOImpl = require("common/dto/dto");
 
 "use strict";
 
-export enum SignupStateEnum {
-    INPUT,
-    SUCCESS,
-    ERROR
-}
-
 export class SignupCtrl implements cf.IBaseController {
 
     public static $inject = [
@@ -32,8 +26,7 @@ export class SignupCtrl implements cf.IBaseController {
         ) {
         // set view model
         this.$scope.vm = this;
-        this.$scope.errorMessages = {};
-        this.$scope.signupState = SignupStateEnum.INPUT;
+        this.$scope.errors = new Array();
         this.$scope.user = new DTOImpl.RegisterUser();
     }
 
@@ -41,8 +34,6 @@ export class SignupCtrl implements cf.IBaseController {
         if (form.$valid) {
             this.userService.signup(user).then(
                 (result: any) => {
-                    this.$scope.signupState = SignupStateEnum.SUCCESS;
-
                     if (this.userService.isAuthDataStored()) {
                         var restoredState = this.userTargetStateService.pullState();
                         if (!_.isUndefined(restoredState) && !_.isNull(restoredState)) {
@@ -53,8 +44,7 @@ export class SignupCtrl implements cf.IBaseController {
                     }
                 },
                 (err: any) => {
-                    console.log(err);
-                    this.$scope.signupState = SignupStateEnum.ERROR;
+                    this.$scope.errors = err.data;
                 });
         }
     }
