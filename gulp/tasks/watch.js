@@ -1,6 +1,5 @@
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var clean = require('gulp-clean');
 var path = require('path');
 var cfg = require('../config');
 var _ = require('lodash');
