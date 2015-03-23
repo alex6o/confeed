@@ -13,12 +13,6 @@ declare module DTO {
         links: any;
     }
 
-    export interface ISearchQuery {
-        lastId: string;
-        limit: number;
-        direction: number;
-    }
-
     export interface IUser extends IPersistedModel {
         username: string;
     }
