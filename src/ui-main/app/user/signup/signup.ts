@@ -26,7 +26,7 @@ export class SignupCtrl implements cf.IBaseController {
         ) {
         // set view model
         this.$scope.vm = this;
-        this.$scope.errors = new Array();
+        this.$scope.errors = [];
         this.$scope.user = new DTOImpl.RegisterUser();
     }
 

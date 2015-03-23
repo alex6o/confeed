@@ -9,11 +9,6 @@ import UserImpl = require("common/user/user");
 
 "use strict";
 
-export enum LoginStateEnum {
-    INPUT,
-    SUCCESS,
-    ERROR
-}
 
 class LoginCtrl implements cf.IBaseController {
 

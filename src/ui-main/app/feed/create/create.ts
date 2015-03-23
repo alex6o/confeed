@@ -26,14 +26,14 @@ export class FeedCreateCtrl implements cf.IBaseController {
         this.$scope.vm = this;
     }
 
-    public getRemainingCharCount(feedPosting: DTO.IFeedPosting): number {
+    public static getRemainingCharCount(feedPosting: DTO.IFeedPosting): number {
         var result: number = FeedCreateCtrl.MAX_POSTING_CHARS;
         if (!_.isUndefined(feedPosting)) {
             result = Math.max(FeedCreateCtrl.MAX_POSTING_CHARS - feedPosting.message.length, 0);
         }
         return result;
     }
-    public getPostingCharLimit(): number {
+    public static getPostingCharLimit(): number {
         return FeedCreateCtrl.MAX_POSTING_CHARS;
     }
 

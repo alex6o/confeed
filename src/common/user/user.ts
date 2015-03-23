@@ -56,7 +56,7 @@ export class UserService {
     }
 
 
-    public logout(user: DTO.ILoginUser): void {
+    public logout(): void {
         this.userReferenceService.resetUser();
         this.userReferenceService.resetUserAuthToken();
     }

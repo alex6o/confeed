@@ -45,6 +45,7 @@ class FeedService implements cf.IFeedService {
         }
     }
 
+
     public sendFeedPosting(feedPost: DTO.IFeedPosting): restangular.IPromise<DTO.IFeedPosting> {
         return this.restangular.all(FeedService.RESOURCE_FEED + "/" + FeedService.RESOURCE_POSTING).post({ posting: feedPost });
     }
@@ -86,7 +87,7 @@ class FeedCtrl implements cf.IBaseController {
 
         // set view model
         this.$scope.vm = this;
-        this.$scope.feedPostings = new Array();
+        this.$scope.feedPostings = [];
         this.$scope.currentUser = this.currentUser;
 
         this.resolveFeedPostings();

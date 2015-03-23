@@ -1,11 +1,5 @@
 /// <reference path="dto.d.ts" />
 
-export class SearchQuery implements DTO.ISearchQuery {
-    lastId: string;
-    limit: number;
-    direction: number;
-}
-
 export class RegisterUser implements DTO.IRegisterUser {
     username: string;
     password: string;

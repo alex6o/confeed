@@ -17,9 +17,9 @@ export function continousFilterUpdateDirective(
             filterName: "=",
             model: "=cfUpdateFilter"
         },
-        link: (scope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes, ctrl) => {
+        link: (scope, element: ng.IAugmentedJQuery) => {
             var updateInterval = 1000 * 30;
-            var interval = undefined;
+            var interval;
 
             function updateFilter() {
                 var filter = $filter(scope.filterName);
