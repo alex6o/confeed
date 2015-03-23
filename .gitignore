@@ -63,3 +63,7 @@ node_modules
 vendor
 bower_components
 /config
+
+#idea
+.idea
+confeed.iml
