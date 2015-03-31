@@ -1,9 +1,10 @@
 /// <reference path="../common/common.d.ts" />
 
 declare module cf {
-  interface IBaseController { }
+  interface IBaseCtrl {
+  }
 
   interface IBaseScope extends ng.IScope {
-    vm: IBaseController;
+    vm: IBaseCtrl;
   }
 }

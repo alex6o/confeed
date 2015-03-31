@@ -8,9 +8,7 @@ require("common/ui/validation/validation");
 import UserImpl = require("common/user/user");
 import DTOImpl = require("common/dto/dto");
 
-"use strict";
-
-export class SignupCtrl implements cf.IBaseController {
+export class SignupCtrl implements cf.ISignupCtrl {
 
     public static $inject = [
         "$scope",
@@ -18,15 +16,17 @@ export class SignupCtrl implements cf.IBaseController {
         "cf_common_userService",
         "cf_common_userTargetStateService"
     ];
+
     constructor(
         private $scope: cf.ISignupScope,
         private $state,
         private userService: UserImpl.UserService,
         private userTargetStateService: UserImpl.UserTargetStateService
         ) {
+
         // set view model
         this.$scope.vm = this;
-        this.$scope.errors = [];
+        this.$scope.error = null;
         this.$scope.user = new DTOImpl.RegisterUser();
     }
 
@@ -41,10 +41,12 @@ export class SignupCtrl implements cf.IBaseController {
                         } else {
                             this.$state.go("feed");
                         }
+                    }else{
+                        console.log("Signup was successful but no auth data is available.");
                     }
                 },
-                (err: any) => {
-                    this.$scope.errors = err.data;
+                (result:restangular.IResponse) => {
+                    this.$scope.error = result.data.error;
                 });
         }
     }
@@ -59,20 +61,15 @@ var moduleDependencies = [
     "ui.router",
     "cf.common.user",
     "cf.common.ui.validation"];
-// module defintion
+
+// module definition
 var angularModule = angular.module("cf.user.signup", moduleDependencies)
-// Controller
     .controller("cf_signupCtrl", SignupCtrl)
-// Services
-// Directives
-// Config
     .config(["$stateProvider",
         ($stateProvider) => {
             $stateProvider.state("signup", {
                 parent: "app",
                 url: "/signup",
-                resolve: {
-                },
                 views: {
                     "content-container@app": {
                         controller: "cf_signupCtrl",

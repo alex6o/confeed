@@ -4,7 +4,7 @@ declare module DTO {
 
     export interface IPersistedModel {
         id: number;
-        created: Date;
+        created: number;
     }
 
     export interface ISearchResult<T extends IPersistedModel> {
@@ -31,5 +31,9 @@ declare module DTO {
         message: string;
         user: IUser;
         links: any;
+    }
+
+    export interface INewFeedPosting {
+        message: string;
     }
 }

@@ -1,7 +1,5 @@
 /// <reference path="user.d.ts"/>
 
-"use strict";
-
 require("angular");
 var jQuery: JQueryStatic = require("jquery");
 var _: _.LoDashStatic = require("lodash");
@@ -29,8 +27,25 @@ export class UserService {
         private userReferenceService: UserReferenceService) {
     }
 
-    public signup(user: DTO.IRegisterUser): restangular.IPromise<any> {
-        return this.restangular.all(UserService.RESOURCE_SIGNUP).post(user);
+    public signup(user: DTO.IRegisterUser): restangular.IPromise<DTO.IUser> {
+        // reset client side user state
+        this.userReferenceService.resetUser();
+        this.userReferenceService.resetUserAuthToken();
+
+        return <restangular.IPromise<DTO.IUser>> this.restangular.all(UserService.RESOURCE_SIGNUP).post(user).then((result) => {
+            // note: the auth interceptor sets the received auth token
+            // load user data
+            return this.loadCurrentUser().then((user: DTO.IUser): DTO.IUser=> {
+                this.userReferenceService.persistUser(user);
+                return user;
+            });
+        },
+        (err) => {
+            console.error("Signup failed: " + err.data);
+            this.userReferenceService.resetUser();
+            this.userReferenceService.resetUserAuthToken();
+            return this.$q.reject(err.data);
+        });
     }
 
     public login(user: DTO.ILoginUser): restangular.IPromise<DTO.IUser> {
@@ -48,10 +63,10 @@ export class UserService {
                 });
             },
             (err) => {
-                console.log("login failed");
+                console.error("Login failed: " + err.data);
                 this.userReferenceService.resetUser();
                 this.userReferenceService.resetUserAuthToken();
-                return this.$q.reject("login failed");
+                return this.$q.reject(err.data);
             });
     }
 
@@ -188,11 +203,11 @@ export class UserReferenceService {
 
 
     removeStoredUser(): void {
-        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER, null, { expires: 7, path: "/", secure: false });
+        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER, "", { expires: 7, path: "/", secure: false });
     }
 
     removeStoredUserAuthToken(): void {
-        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN, null, { expires: 7, path: "/", secure: false });
+        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN, "", { expires: 7, path: "/", secure: false });
     }
 
     resetUser(): void {
@@ -260,7 +275,7 @@ export class UserAuthHttpInterceptor {
 
     public request = (config) => {
         var token: string = this.userReferenceService.getUserAuthToken();
-        if (!_.isUndefined(token)) {
+        if (!_.isUndefined(token) && !_.isNull(token)) {
             config.headers[UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN] = UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN_PREFIX + token;
         }
         return config;

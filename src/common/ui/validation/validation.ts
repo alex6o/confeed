@@ -5,8 +5,6 @@ require("angular");
 require("jquery");
 require("restangular");
 
-"use strict";
-
 // source: http://odetocode.com/blogs/scott/archive/2014/10/13/confirm-password-validation-in-angularjs.aspx
 export function equalToValidationDirective(): ng.IDirective {
     return {

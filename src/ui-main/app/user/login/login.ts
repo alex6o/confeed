@@ -6,11 +6,10 @@ require("angular-ui-router");
 require("common/ui/validation/validation");
 
 import UserImpl = require("common/user/user");
+import DTOImpl = require("common/dto/dto");
 
-"use strict";
 
-
-class LoginCtrl implements cf.IBaseController {
+class LoginCtrl implements cf.IBaseCtrl {
 
     public static $inject = [
         "$scope",
@@ -18,23 +17,23 @@ class LoginCtrl implements cf.IBaseController {
         "cf_common_userService",
         "cf_common_userTargetStateService"
     ];
-    constructor(
-        private $scope: cf.ILoginScope,
-        private $state: any,
-        private userService: UserImpl.UserService,
-        private userTargetStateService: UserImpl.UserTargetStateService
-        ) {
+
+    constructor(private $scope:cf.ILoginScope,
+                private $state:any,
+                private userService:UserImpl.UserService,
+                private userTargetStateService:UserImpl.UserTargetStateService) {
         // set view model
         this.$scope.vm = this;
         this.$scope.error = null;
+        this.$scope.user = new DTOImpl.LoginUser();
     }
 
-    public onClickLogin(form:ng.IFormController, user:DTO.ILoginUser): void {
+    public onClickLogin(form:ng.IFormController, user:DTO.ILoginUser):void {
         this.$scope.error = null;
 
         if (form.$valid) {
             this.userService.login(user).then(
-                (result: DTO.IUser) => {
+                (result:DTO.IUser) => {
                     if (this.userService.isAuthDataStored()) {
                         var restoredState = this.userTargetStateService.pullState();
                         if (!_.isUndefined(restoredState) && !_.isNull(restoredState)) {
@@ -44,8 +43,8 @@ class LoginCtrl implements cf.IBaseController {
                         }
                     }
                 },
-                (err: any) => {
-                    this.$scope.error = err.data;
+                (result:restangular.IResponse) => {
+                    this.$scope.error = result.data.error;
                 });
         }
     }
@@ -73,8 +72,7 @@ var angularModule = angular.module("cf.user.login", moduleDependencies)
             $stateProvider.state("login", {
                 parent: "app",
                 url: "/login",
-                resolve: {
-                },
+                resolve: {},
                 views: {
                     "content-container@app": {
                         controller: "cf_loginCtrl",

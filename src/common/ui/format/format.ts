@@ -6,7 +6,6 @@ require("jquery");
 
 var moment = require("moment");
 
-"use strict";
 
 export function continousFilterUpdateDirective(
     $interval: ng.IIntervalService,
