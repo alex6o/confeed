@@ -39,12 +39,11 @@ export class UserService {
                 this.userReferenceService.persistUser(user);
                 return user;
             });
-        },
-        (err) => {
-            console.error("Signup failed: " + err.data);
+        },(result:restangular.IResponse) => {
+            console.error("Signup failed: " + result.data.error);
             this.userReferenceService.resetUser();
             this.userReferenceService.resetUserAuthToken();
-            return this.$q.reject(err.data);
+            return this.$q.reject(result);
         });
     }
 
@@ -61,12 +60,11 @@ export class UserService {
                     this.userReferenceService.persistUser(user);
                     return user;
                 });
-            },
-            (err) => {
-                console.error("Login failed: " + err.data);
+            },(result:restangular.IResponse) => {
+                console.error("Login failed: " + result.data.error);
                 this.userReferenceService.resetUser();
                 this.userReferenceService.resetUserAuthToken();
-                return this.$q.reject(err.data);
+                return this.$q.reject(result);
             });
     }
 
@@ -92,10 +90,10 @@ export class UserService {
             this.loadCurrentUser().then((user: DTO.IUser): void=> {
                 this.userReferenceService.persistUser(user);
                 deferred.resolve(this.userReferenceService.getUser());
-            }, (err) => {
-                    if (err.status === 401) {
+            }, (result:restangular.IResponse) => {
+                    if (result.status === 401) {
                         deferred.reject(ERROR_UNAUTHORIZED);
-                    } else if (err.status === 419) {
+                    } else if (result.status === 419) {
                         deferred.reject(ERROR_AUTHORIZATION_EXPIRED);
                     }
                 });

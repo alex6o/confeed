@@ -2,7 +2,7 @@
     <form name="loginForm">
         <h2 class="form-login-heading">Login <a data-ui-sref="signup"><i class="fa fa-angle-double-right"></i> Signup</a></h2>
         <div class="alert alert-danger" role="alert" data-ng-show="error">
-            <i class="fa fa-exclamation-circle"></i> Login failed - please check your credentials!
+            <i class="fa fa-exclamation-circle"></i> <strong>Error - </strong><span data-ng-bind="error"></span>
         </div>
         <div class="form-group">
             <input data-ng-model="user.username" type="text" name="username" id="input-username" class="form-control input-lg" placeholder="Username" required="" autofocus="">
