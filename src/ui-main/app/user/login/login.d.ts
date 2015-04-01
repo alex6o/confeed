@@ -1,5 +1,4 @@
 /// <reference path="../user.d.ts"/>
-
 declare module cf {
 
     /**
@@ -13,6 +12,7 @@ declare module cf {
          */
         onClickLogin(form:ng.IFormController, user:DTO.ILoginUser):void;
     }
+
 
     interface ILoginScope extends IBaseScope {
         user: DTO.ILoginUser;

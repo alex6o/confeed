@@ -1,14 +1,18 @@
 /// <reference path="user.d.ts"/>
 
 require("angular");
-var jQuery: JQueryStatic = require("jquery");
-var _: _.LoDashStatic = require("lodash");
+var jQuery:JQueryStatic = require("jquery");
+var _:_.LoDashStatic = require("lodash");
 require("jquery-cookie");
 require("restangular");
 
 export var ERROR_UNAUTHORIZED = "ERROR_UNAUTHORIZED";
 export var ERROR_AUTHORIZATION_EXPIRED = "ERROR_AUTHORIZATION_EXPIRED";
 
+/**
+ * User Service
+ * Manages user registration and authentication
+ */
 export class UserService {
     static RESOURCE_LOGIN = "user/login";
     static RESOURCE_SIGNUP = "user/signup";
@@ -21,47 +25,81 @@ export class UserService {
         "cf_common_userReferenceService"
     ];
 
-    constructor(
-        private $q: any,
-        private restangular: restangular.IService,
-        private userReferenceService: UserReferenceService) {
+    constructor(private $q:any,
+                private restangular:restangular.IService,
+                private userReferenceService:UserReferenceService) {
     }
 
-    public signup(user: DTO.IRegisterUser): restangular.IPromise<DTO.IUser> {
-        // reset client side user state
+    /**
+     * Process registration for provided user data
+     * NOTE: the registration and login are combined on the api side, hence an successful registration requests already
+     * includes the auth token in the response!
+     * @param user  user data for the registration
+     * @returns {restangular.IPromise<DTO.IUser>} promise of the registration result - in case of a successful user registration
+     * the persisted user object is returned
+     */
+    public signup(user:DTO.IRegisterUser):restangular.IPromise<DTO.IUser> {
+
+        // remove the stored user information
         this.userReferenceService.resetUser();
+        // remove the stored user auth token
         this.userReferenceService.resetUserAuthToken();
 
+        // send registration request with the provided user data to the api
         return <restangular.IPromise<DTO.IUser>> this.restangular.all(UserService.RESOURCE_SIGNUP).post(user).then((result) => {
-            // note: the auth interceptor sets the received auth token
-            // load user data
-            return this.loadCurrentUser().then((user: DTO.IUser): DTO.IUser=> {
+            // NOTE: if the the registration is successful, the user should be logged in
+            // The auth interceptor has to ensure the proper handling of the received auth token (header)!
+
+            // at this point the user should be handled as logged in
+            // --> load user data from the api
+            return this.loadCurrentUser().then((user:DTO.IUser):DTO.IUser=> {
+                // store user data
                 this.userReferenceService.persistUser(user);
                 return user;
             });
-        },(result:restangular.IResponse) => {
+
+        }, (result:restangular.IResponse) => {
+            // the registration request failed
+            // error handling goes here
             console.error("Signup failed: " + result.data.error);
+
+            // remove any stored user data on the client side
             this.userReferenceService.resetUser();
             this.userReferenceService.resetUserAuthToken();
             return this.$q.reject(result);
         });
     }
 
-    public login(user: DTO.ILoginUser): restangular.IPromise<DTO.IUser> {
-        // reset client side user state
+    /**
+     * Login the user with the provided credentials
+     * @param user  the authentication credentials
+     * @returns {restangular.IPromise<DTO.IUser>}   promise containing the persisted user information
+     */
+    public login(user:DTO.ILoginUser):restangular.IPromise<DTO.IUser> {
+
+        // remove the stored user information
         this.userReferenceService.resetUser();
+        // remove the stored user auth token
         this.userReferenceService.resetUserAuthToken();
 
+        // send the login request with the provided credentials
         return <restangular.IPromise<DTO.IUser>> this.restangular.all(UserService.RESOURCE_LOGIN).post(user).then(
             (result) => {
-                // note: the auth interceptor sets the received auth token
-                // load user data
-                return this.loadCurrentUser().then((user: DTO.IUser): DTO.IUser=> {
+                // NOTE: if the the login is successful, no additional data is returned
+                // The auth interceptor has to ensure the proper handling of the received auth token (header)!
+
+                // --> load user data from the api
+                return this.loadCurrentUser().then((user:DTO.IUser):DTO.IUser=> {
+                    // store user data
                     this.userReferenceService.persistUser(user);
                     return user;
                 });
-            },(result:restangular.IResponse) => {
+            }, (result:restangular.IResponse) => {
+                // the login request failed
+                // error handling goes here
                 console.error("Login failed: " + result.data.error);
+
+                // remove any stored user data on the client side
                 this.userReferenceService.resetUser();
                 this.userReferenceService.resetUserAuthToken();
                 return this.$q.reject(result);
@@ -69,34 +107,49 @@ export class UserService {
     }
 
 
-    public logout(): void {
+    /**
+     * Logout the user on client side
+     */
+    public logout():void {
         this.userReferenceService.resetUser();
         this.userReferenceService.resetUserAuthToken();
     }
 
-    public validateRegister(user: DTO.IRegisterUser): restangular.IPromise<any> {
-        return this.restangular.all(UserService.RESOURCE_VALIDATE_REGISTRATION).post({ user: user });
-    }
-
-    public loadCurrentUser(): restangular.IPromise<DTO.IUser> {
+    /**
+     * Load the user information using the stored auth token
+     * @returns {restangular.IPromise<DTO.IUser>}  promise containing the persisted user information
+     */
+    public loadCurrentUser():restangular.IPromise<DTO.IUser> {
         return this.restangular.one(UserService.RESOURCE_CURRENT_USER, null).get();
     }
 
-    public isAuthorized(): ng.IPromise<string> {
+    /**
+     * Check if the stored user auth token is valid
+     * @returns {ng.IPromise<string>} if the returned promise is resolved the user is authorized otherwise in case
+     * of rejection the user is <code>ERROR_UNAUTHORIZED</code> or <code>ERROR_AUTHORIZATION_EXPIRED</code>
+     */
+    public isAuthorized():ng.IPromise<string> {
         var deferred = this.$q.defer();
 
+        // is an auth token available
         if (this.isAuthDataStored()) {
-            // load user data
-            this.loadCurrentUser().then((user: DTO.IUser): void=> {
+            // load user data from api
+            this.loadCurrentUser().then((user:DTO.IUser):void=> {
+                // update existing data
                 this.userReferenceService.persistUser(user);
-                deferred.resolve(this.userReferenceService.getUser());
+                // mark as authorized
+                deferred.resolve();
             }, (result:restangular.IResponse) => {
-                    if (result.status === 401) {
-                        deferred.reject(ERROR_UNAUTHORIZED);
-                    } else if (result.status === 419) {
-                        deferred.reject(ERROR_AUTHORIZATION_EXPIRED);
-                    }
-                });
+                // reject depending on response
+                if (result.status === 401) {
+                    deferred.reject(ERROR_UNAUTHORIZED);
+                } else if (result.status === 419) {
+                    deferred.reject(ERROR_AUTHORIZATION_EXPIRED);
+                } else {
+                    // default rejection reason
+                    deferred.reject(ERROR_UNAUTHORIZED);
+                }
+            });
         } else {
             deferred.reject(ERROR_UNAUTHORIZED);
         }
@@ -104,31 +157,56 @@ export class UserService {
         return deferred.promise;
     }
 
-    public isAuthDataStored(): boolean {
+    /**
+     * Check if auth data is stored on the client
+     * @returns {boolean}
+     */
+    public isAuthDataStored():boolean {
         return !_.isUndefined(this.userReferenceService.getUserAuthToken()) && !_.isUndefined(this.getCurrentUser());
     }
 
-    public getCurrentUser(): DTO.IUser {
+    /**
+     * Get the user data stored on the client side
+     * @returns {DTO.IUser} the user data
+     */
+    public getCurrentUser():DTO.IUser {
         return this.userReferenceService.getUser();
     }
-
 }
 
+
+/**
+ * UserTargetStateService
+ * Basic storage for states and parameters
+ */
 export class UserTargetStateService implements User.UserTargetStateService {
     private targetState;
     private targetParams;
 
+    /**
+     * Store an single state
+     * @param state
+     * @param params
+     */
     public pushState(state, params) {
         this.targetState = state;
         this.targetParams = params;
     }
 
+    /**
+     * Get the stored state
+     * @returns {any} the state
+     */
     public pullState() {
         var state = _.clone(this.targetState);
         this.targetState = null;
         return state;
     }
 
+    /**
+     * Get the stored parameters
+     * @returns {any} the parameters
+     */
     public pullParams() {
         var params = _.clone(this.targetParams);
         this.targetParams = null;
@@ -136,52 +214,71 @@ export class UserTargetStateService implements User.UserTargetStateService {
     }
 }
 
-
+/**
+ * UserReferenceService
+ * Manages the storage of user data and user auth data on the client
+ */
 export class UserReferenceService {
     public static COOKIE_USER = "CF_USER";
     public static COOKIE_USER_AUTH_TOKEN = "CF_USER_AUTH_TOKEN";
-    private currentUser: DTO.IUser;
-    private userAuthToken: string;
+    private currentUser:DTO.IUser;
+    private userAuthToken:string;
 
-    setUser(user: DTO.IUser) {
+    setUser(user:DTO.IUser) {
         this.currentUser = user;
     }
 
-    getUser(): DTO.IUser {
+    /**
+     * Get the available user data
+     * @returns {DTO.IUser} the user data or undefined if the user data is not available
+     */
+    getUser():DTO.IUser {
         if (_.isUndefined(this.currentUser)) {
             this.restoreUser();
         }
         return this.currentUser;
     }
 
-    setUserAuthToken(token: string) {
+    setUserAuthToken(token:string) {
         this.userAuthToken = token;
     }
 
-    getUserAuthToken(): string {
+    /**
+     * Get the available user auth token
+     * @returns {string} the user auth token or undefined if the token is not available
+     */
+    getUserAuthToken():string {
         if (_.isUndefined(this.userAuthToken)) {
             this.restoreUserAuthToken();
         }
         return this.userAuthToken;
     }
 
-    storeUser(user: DTO.IUser) {
+    private storeUser(user:DTO.IUser) {
         // remove previous cookies
         this.removeStoredUser();
         if (!_.isUndefined(user)) {
-            (<any>jQuery).cookie(UserReferenceService.COOKIE_USER, JSON.stringify(user), { expires: 7, path: "/", secure: false });
+            (<any>jQuery).cookie(UserReferenceService.COOKIE_USER, JSON.stringify(user), {
+                expires: 7,
+                path: "/",
+                secure: false
+            });
         }
     }
 
-    storeUserAuthToken(token: string) {
+    private storeUserAuthToken(token:string) {
         // remove previous cookies
         this.removeStoredUserAuthToken();
         if (!_.isUndefined(token)) {
-            (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN, token, { expires: 7, path: "/", secure: false });
+            (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN, token, {
+                expires: 7,
+                path: "/",
+                secure: false
+            });
         }
     }
 
-    restoreUser(): DTO.IUser {
+    private restoreUser():DTO.IUser {
         var userCookie = (<any>jQuery).cookie(UserReferenceService.COOKIE_USER);
         if (!_.isUndefined(userCookie) && userCookie.length > 0) {
             this.setUser(JSON.parse(userCookie));
@@ -190,7 +287,7 @@ export class UserReferenceService {
         return undefined;
     }
 
-    restoreUserAuthToken(): string {
+    private restoreUserAuthToken():string {
         var tokenCookie = (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN);
         if (!_.isUndefined(tokenCookie) && tokenCookie.length > 0) {
             this.setUserAuthToken(tokenCookie);
@@ -200,41 +297,59 @@ export class UserReferenceService {
     }
 
 
-    removeStoredUser(): void {
-        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER, "", { expires: 7, path: "/", secure: false });
+    private removeStoredUser():void {
+        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER, "", {expires: 7, path: "/", secure: false});
     }
 
-    removeStoredUserAuthToken(): void {
-        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN, "", { expires: 7, path: "/", secure: false });
+    private removeStoredUserAuthToken():void {
+        (<any>jQuery).cookie(UserReferenceService.COOKIE_USER_AUTH_TOKEN, "", {expires: 7, path: "/", secure: false});
     }
 
-    resetUser(): void {
+    /**
+     * Remove user data stored on the client side
+     */
+    resetUser():void {
         this.currentUser = undefined;
         this.removeStoredUser();
     }
 
-    resetUserAuthToken(): void {
+    /**
+     * Remove user auth token stored on the cliend side
+     */
+    resetUserAuthToken():void {
         this.userAuthToken = undefined;
         this.removeStoredUserAuthToken();
     }
 
-    persistUserAuthToken(token: string): void {
+    /**
+     * Persist user auth token on the client side
+     * @param token user auth token
+     */
+    persistUserAuthToken(token:string):void {
         console.log("persisting user auth token");
         this.setUserAuthToken(token);
         this.storeUserAuthToken(token);
     }
 
-    persistUser(user: DTO.IUser): void {
+    /**
+     * Persist user data on the client side
+     * @param user user data to persist
+     */
+    persistUser(user:DTO.IUser):void {
         console.log("persisting user");
         this.setUser(user);
         this.storeUser(user);
     }
 }
 
+/**
+ *  UserAuthHttpInterceptor
+ *  Interceptor for HTTP requests that manages the insertion and handling of auth relevant headers
+ */
 export class UserAuthHttpInterceptor {
     static RESOURCE_USER = "user";
 
-    static POST_HEADER = { "Content-Type": "application/x-www-form-urlencoded" };
+    static POST_HEADER = {"Content-Type": "application/x-www-form-urlencoded"};
     public static HEADER_AUTHORIZATIONTOKEN = "X-CF-AUTH-TOKEN";
     public static HEADER_AUTHORIZATIONTOKEN_PREFIX = "";
     static RESPONSE_CODE_UNAUTHORIZED = 401;
@@ -247,12 +362,19 @@ export class UserAuthHttpInterceptor {
         "$location"
     ];
 
-    constructor(public $rootScope, public userReferenceService: UserReferenceService, public $q, public $location) {
+    constructor(public $rootScope, public userReferenceService:UserReferenceService, public $q, public $location) {
     }
 
+    /**
+     * Handling of failed responses
+     * For responses with status 401, the user is logged out on the client and redirected to the login
+     * @param response {@link https://docs.angularjs.org/api/ng/service/$http#interceptors}
+     * @returns {any}
+     */
     public responseError = (response) => {
+
         if (response.status === 401) {
-            console.log("unauthorized request");
+            console.error("Unauthorized request");
             this.userReferenceService.resetUser();
             this.userReferenceService.resetUserAuthToken();
             this.$location.path('/login');
@@ -260,6 +382,12 @@ export class UserAuthHttpInterceptor {
         return this.$q.reject(response);
     };
 
+    /**
+     * Handling of successful responses
+     * For responses with authentication header the containing token is stored on the client (user is logged in)
+     * @param response {@link https://docs.angularjs.org/api/ng/service/$http#interceptors}
+     * @returns {any}
+     */
     public response = (response) => {
         var authToken = response.headers(UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN);
         if (!_.isEmpty(authToken)) {
@@ -271,8 +399,13 @@ export class UserAuthHttpInterceptor {
         return response;
     };
 
+    /**
+     * Adding the authentication token to every request if the user is logged in
+     * @param config {@link https://docs.angularjs.org/api/ng/service/$http#interceptors}
+     * @returns {any}
+     */
     public request = (config) => {
-        var token: string = this.userReferenceService.getUserAuthToken();
+        var token:string = this.userReferenceService.getUserAuthToken();
         if (!_.isUndefined(token) && !_.isNull(token)) {
             config.headers[UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN] = UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN_PREFIX + token;
         }
@@ -281,26 +414,28 @@ export class UserAuthHttpInterceptor {
 }
 
 
-export function loginRequired(cf_common_userService: UserService) {
+/**
+ * Wrapper for usage in state resolve dependency - management
+ * @param cf_common_userService
+ * @returns {ng.IPromise<string>} {@link UserService.isAuthorized}
+ */
+export function loginRequired(cf_common_userService:UserService):ng.IPromise<string> {
     return cf_common_userService.isAuthorized();
 }
 
 
 /**
-* AngularJS Module Definition
-*/
+ * AngularJS Module Definition
+ */
 
 // module dependencies
 var moduleDependencies = [
     "restangular",
     "ui.router"];
-// module defintion
+
+// module definition
 angular.module("cf.common.user", moduleDependencies)
-// Controller
-// Services
     .service("cf_common_userService", UserService)
     .service("cf_common_userReferenceService", UserReferenceService)
     .service("cf_common_userAuthHttpInterceptor", UserAuthHttpInterceptor)
     .service("cf_common_userTargetStateService", UserTargetStateService);
-// Directives
-// Config

@@ -6,6 +6,7 @@ require("lodash");
 import DTOImpl = require("common/dto/dto");
 
 export class FeedCreateCtrl implements cf.IBaseCtrl {
+
     public static MAX_POSTING_CHARS = 180;
     private feedCtrl:cf.IFeedCtrl;
 
@@ -67,6 +68,6 @@ export class FeedCreateCtrl implements cf.IBaseCtrl {
 var moduleDependencies = [
     "ui.router"
 ];
-// module defintion
+// module definition
 var angularModule = angular.module("cf.feed.create", moduleDependencies)
     .controller("cf_feedCreateCtrl", FeedCreateCtrl);

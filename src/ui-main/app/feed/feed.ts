@@ -14,6 +14,10 @@ require("./create/create");
 
 import UserImpl = require("common/user/user");
 
+/**
+ * Feed Service
+ * Creation and retrieving of feed postings
+ */
 class FeedService implements cf.IFeedService {
     static RESOURCE_FEED = "feed";
     static RESOURCE_POSTING = "posting";
@@ -49,7 +53,7 @@ class FeedService implements cf.IFeedService {
         if (!_.isUndefined(refFeedPosting.links) && !_.isUndefined(refFeedPosting.links["next"])) {
             return this.hateoasRestangular.oneUrl(refFeedPosting.links["next"].href, null).customGET(null);
         } else {
-            return this.$q.reject("no next link available!");
+            return this.$q.reject("No next link available!");
         }
     }
 
@@ -222,15 +226,12 @@ var moduleDependencies = [
     "cf.common.ui.format",
     "cf.feed.create"
 ];
-// module defintion
+
+// module definition
 var angularModule = angular.module("cf.feed", moduleDependencies)
-// Controller
     .controller("cf_feedCtrl", FeedCtrl)
-// Services
     .service("cf_feedService", FeedService)
     .animation(".feed-posting", feedBlockAnimation)
-// Directives
-    /*// Config*/
     .config(["$stateProvider",
         ($stateProvider) => {
             $stateProvider.state("feed", {

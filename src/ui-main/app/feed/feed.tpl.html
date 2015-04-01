@@ -5,18 +5,18 @@
             <span class="username" data-ng-bind="currentUser.username"></span>!
             <a class="badge badge-info" href="#" data-ng-click="vm.onClickLogout()">Logout</a>
             <a class="badge badge-info"
-                data-ng-class="{'badge-warning': vm.getPostingLimit() === 0}"
-                href="#"
-                data-ng-click="vm.togglePostingLimit()">
-            <span data-ng-show="vm.getPostingLimit() > 0" data-ng-bind="vm.getPostingLimit() + ' Postings'"></span>
-            <span data-ng-show="vm.getPostingLimit() === 0">No limit</span>
-        </a>
+               data-ng-class="{'badge-warning': vm.getPostingLimit() === 0}"
+               href="#"
+               data-ng-click="vm.togglePostingLimit()">
+                <span data-ng-show="vm.getPostingLimit() > 0" data-ng-bind="vm.getPostingLimit() + ' Postings'"></span>
+                <span data-ng-show="vm.getPostingLimit() === 0">No limit</span>
+            </a>
         </p>
     </div>
 </div>
 <div class="row">
     <div class="col-xs-12">
-        <div data-ui-view="create-posting" />
+        <div data-ui-view="create-posting"/>
     </div>
 </div>
 <div class="row">
@@ -33,13 +33,16 @@
                         <p data-ng-bind="posting.message"></p>
                     </div>
                     <div class="timeline-posting-date">
-                        <span class="date" data-cf-update-filter="posting.created" data-filter-name="'cfTimeFromNow'"></span>
+                        <span class="date" data-cf-update-filter="posting.created"
+                              data-filter-name="'cfTimeFromNow'"></span>
                     </div>
                 </div>
             </div>
         </section>
         <div id="load-more" data-ng-show="feedPostings.length > 0">
-            <button type="button" class="btn btn-link heading" data-ng-click="vm.onClickLoadMore()"  data-ng-show="vm.hasMoreFeedPostings()">Load more ...</button>
+            <button type="button" class="btn btn-link heading" data-ng-click="vm.onClickLoadMore()"
+                    data-ng-show="vm.hasMoreFeedPostings()">Load more ...
+            </button>
             <h3 class="heading" data-ng-show="!vm.hasMoreFeedPostings()">You have reached the end of this feed!</h3>
         </div>
     </div>

@@ -9,7 +9,7 @@ import UserImpl = require("common/user/user");
 import DTOImpl = require("common/dto/dto");
 
 
-class LoginCtrl implements cf.IBaseCtrl {
+class LoginCtrl implements cf.ILoginCtrl {
 
     public static $inject = [
         "$scope",
@@ -60,13 +60,9 @@ var moduleDependencies = [
     "cf.common.user",
     "cf.common.ui.validation"];
 
-// module defintion
+// module definition
 var angularModule = angular.module("cf.user.login", moduleDependencies)
-// Controller
     .controller("cf_loginCtrl", LoginCtrl)
-// Services
-// Directives
-// Config
     .config(["$stateProvider",
         ($stateProvider) => {
             $stateProvider.state("login", {

@@ -47,16 +47,10 @@ function timeFromNowFilter() {
 * AngularJS Module Definition
 */
 
-
-
 // module dependencies
-var moduleDependencies = [
-];
-// module defintion
+var moduleDependencies = [];
+// module definition
 var angularModule = angular.module("cf.common.ui.format", moduleDependencies)
-// Controller
-// Services
-// Directives
     .directive("cfUpdateFilter", continousFilterUpdateDirective)
     .filter("cfTimeFromNow", timeFromNowFilter);
-// Config
+
