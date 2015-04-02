@@ -33,11 +33,15 @@ export class AppCtrl {
     constructor(private $scope:cf.IBaseScope,
                 private $state:any,
                 private $rootScope:any,
-                private userTargetStateService:UserImpl.UserTargetStateService) {
+                private userTargetStateService:User.IUserTargetStateService) {
 
         // Global listener for errors during state changes
         this.$rootScope.$on('$stateChangeError', (event, toState, toParams, fromState, fromParams, error) => {
 
+            /**
+             * [TODO: AUTH HANDLING]
+             * Handle events caused by authentication errors
+             */
             // handle unauthorized access
             if (error === UserImpl.ERROR_UNAUTHORIZED) {
                 // backup target state
@@ -61,7 +65,6 @@ export class AppCtrl {
         $state.go("feed");
     }
 }
-
 
 /**
  * AngularJS Module Definition
