@@ -20,7 +20,7 @@ export class SignupCtrl implements cf.ISignupCtrl {
     constructor(
         private $scope: cf.ISignupScope,
         private $state,
-        private userService: UserImpl.UserService,
+        private userService: User.IUserService,
         private userTargetStateService: UserImpl.UserTargetStateService
         ) {
 
@@ -34,15 +34,11 @@ export class SignupCtrl implements cf.ISignupCtrl {
         if (form.$valid) {
             this.userService.signup(user).then(
                 (result: any) => {
-                    if (this.userService.isAuthDataStored()) {
-                        var restoredState = this.userTargetStateService.pullState();
-                        if (!_.isUndefined(restoredState) && !_.isNull(restoredState)) {
-                            this.$state.go(restoredState.name, this.userTargetStateService.pullParams());
-                        } else {
-                            this.$state.go("feed");
-                        }
-                    }else{
-                        console.log("Signup was successful but no auth data is available.");
+                    var restoredState = this.userTargetStateService.pullState();
+                    if (!_.isUndefined(restoredState) && !_.isNull(restoredState)) {
+                        this.$state.go(restoredState.name, this.userTargetStateService.pullParams());
+                    } else {
+                        this.$state.go("feed");
                     }
                 },
                 (result:restangular.IResponse) => {

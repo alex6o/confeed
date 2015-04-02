@@ -5,7 +5,7 @@ require("lodash");
 
 import DTOImpl = require("common/dto/dto");
 
-export class FeedCreateCtrl implements cf.IBaseCtrl {
+export class FeedCreateCtrl implements cf.IFeedCreateCtrl {
 
     public static MAX_POSTING_CHARS = 180;
     private feedCtrl:cf.IFeedCtrl;

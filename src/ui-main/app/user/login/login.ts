@@ -20,7 +20,7 @@ class LoginCtrl implements cf.ILoginCtrl {
 
     constructor(private $scope:cf.ILoginScope,
                 private $state:any,
-                private userService:UserImpl.UserService,
+                private userService:User.IUserService,
                 private userTargetStateService:UserImpl.UserTargetStateService) {
         // set view model
         this.$scope.vm = this;

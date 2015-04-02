@@ -14,6 +14,7 @@ require("./create/create");
 
 import UserImpl = require("common/user/user");
 
+
 /**
  * Feed Service
  * Creation and retrieving of feed postings
@@ -88,7 +89,7 @@ class FeedCtrl implements cf.IFeedCtrl {
                 private $stateParams:any,
                 private $interval:ng.IIntervalService,
                 private currentUser:DTO.IUser,
-                private userService:any,
+                private userService:User.IUserService,
                 private feedService:cf.IFeedService) {
 
         // init timestamp
@@ -187,7 +188,7 @@ class FeedCtrl implements cf.IFeedCtrl {
                             this.$scope.feedPostings.push(entry);
                         }).value();
                     } else {
-                        this.moreFeedPostings = false;
+                        this.setMoreFeedPostings(false);
                     }
                 },
                 (result:restangular.IResponse) => {
@@ -195,6 +196,10 @@ class FeedCtrl implements cf.IFeedCtrl {
                     // handle error
                 });
         }
+    }
+
+    public setMoreFeedPostings(moreFeedPostings:boolean):void{
+        this.moreFeedPostings = moreFeedPostings;
     }
 
     public hasMoreFeedPostings():boolean {

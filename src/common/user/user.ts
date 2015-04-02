@@ -13,7 +13,7 @@ export var ERROR_AUTHORIZATION_EXPIRED = "ERROR_AUTHORIZATION_EXPIRED";
  * User Service
  * Manages user registration and authentication
  */
-export class UserService {
+export class UserService implements User.IUserService{
     static RESOURCE_LOGIN = "user/login";
     static RESOURCE_SIGNUP = "user/signup";
     static RESOURCE_VALIDATE_REGISTRATION = "user/validate";
@@ -30,14 +30,7 @@ export class UserService {
                 private userReferenceService:UserReferenceService) {
     }
 
-    /**
-     * Process registration for provided user data
-     * NOTE: the registration and login are combined on the api side, hence an successful registration requests already
-     * includes the auth token in the response!
-     * @param user  user data for the registration
-     * @returns {restangular.IPromise<DTO.IUser>} promise of the registration result - in case of a successful user registration
-     * the persisted user object is returned
-     */
+
     public signup(user:DTO.IRegisterUser):restangular.IPromise<DTO.IUser> {
 
         // remove the stored user information
@@ -70,11 +63,6 @@ export class UserService {
         });
     }
 
-    /**
-     * Login the user with the provided credentials
-     * @param user  the authentication credentials
-     * @returns {restangular.IPromise<DTO.IUser>}   promise containing the persisted user information
-     */
     public login(user:DTO.ILoginUser):restangular.IPromise<DTO.IUser> {
 
         // remove the stored user information
@@ -106,28 +94,15 @@ export class UserService {
             });
     }
 
-
-    /**
-     * Logout the user on client side
-     */
     public logout():void {
         this.userReferenceService.resetUser();
         this.userReferenceService.resetUserAuthToken();
     }
 
-    /**
-     * Load the user information using the stored auth token
-     * @returns {restangular.IPromise<DTO.IUser>}  promise containing the persisted user information
-     */
     public loadCurrentUser():restangular.IPromise<DTO.IUser> {
         return this.restangular.one(UserService.RESOURCE_CURRENT_USER, null).get();
     }
 
-    /**
-     * Check if the stored user auth token is valid
-     * @returns {ng.IPromise<string>} if the returned promise is resolved the user is authorized otherwise in case
-     * of rejection the user is <code>ERROR_UNAUTHORIZED</code> or <code>ERROR_AUTHORIZATION_EXPIRED</code>
-     */
     public isAuthorized():ng.IPromise<string> {
         var deferred = this.$q.defer();
 
@@ -157,18 +132,10 @@ export class UserService {
         return deferred.promise;
     }
 
-    /**
-     * Check if auth data is stored on the client
-     * @returns {boolean}
-     */
     public isAuthDataStored():boolean {
         return !_.isUndefined(this.userReferenceService.getUserAuthToken()) && !_.isUndefined(this.getCurrentUser());
     }
 
-    /**
-     * Get the user data stored on the client side
-     * @returns {DTO.IUser} the user data
-     */
     public getCurrentUser():DTO.IUser {
         return this.userReferenceService.getUser();
     }
@@ -179,34 +146,21 @@ export class UserService {
  * UserTargetStateService
  * Basic storage for states and parameters
  */
-export class UserTargetStateService implements User.UserTargetStateService {
+export class UserTargetStateService implements User.IUserTargetStateService {
     private targetState;
     private targetParams;
 
-    /**
-     * Store an single state
-     * @param state
-     * @param params
-     */
     public pushState(state, params) {
         this.targetState = state;
         this.targetParams = params;
     }
 
-    /**
-     * Get the stored state
-     * @returns {any} the state
-     */
     public pullState() {
         var state = _.clone(this.targetState);
         this.targetState = null;
         return state;
     }
 
-    /**
-     * Get the stored parameters
-     * @returns {any} the parameters
-     */
     public pullParams() {
         var params = _.clone(this.targetParams);
         this.targetParams = null;
@@ -419,7 +373,7 @@ export class UserAuthHttpInterceptor {
  * @param cf_common_userService
  * @returns {ng.IPromise<string>} {@link UserService.isAuthorized}
  */
-export function loginRequired(cf_common_userService:UserService):ng.IPromise<string> {
+export function loginRequired(cf_common_userService:User.IUserService):ng.IPromise<string> {
     return cf_common_userService.isAuthorized();
 }
 
