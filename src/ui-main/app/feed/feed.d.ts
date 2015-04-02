@@ -15,6 +15,40 @@ declare module cf {
          * Trigger the fetching of new feed postings
          */
         resolveFeedPostings():void;
+
+        /**
+         * Initial fetching of postings
+         * This method is responsible to fetch x existing posts and to check if there are new postings available
+         */
+        resolveInitialFeedPostings():void;
+
+        /**
+         * Toggle for limiting the number of listed postings
+         */
+        togglePostingLimit():void;
+
+        /**
+         * Handling for clicks on logout
+         */
+        onClickLogout():void;
+
+        /**
+         * Get the current limit for listed postings
+         * @returns {number} the max. number of listed postings
+         */
+        getPostingLimit():number;
+
+        /**
+         * Handling for clicks on load more postings
+         * This method has to trigger the fetching logic to get the next (older) postings
+         */
+        onClickLoadMore():void;
+
+        /**
+         * Check if there are more postings available for the feed
+         * @returns {boolean} true if there are more postings available
+         */
+        hasMoreFeedPostings():boolean;
     }
 
     interface IFeedService {

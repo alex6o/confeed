@@ -158,7 +158,7 @@ class FeedCtrl implements cf.IFeedCtrl {
             });
     }
 
-    public togglePostingLimit() {
+    public togglePostingLimit():void {
         if (this.postingLimit == 0) {
             this.postingLimit = FeedCtrl.DEFAULT_POSTING_LIMIT;
         } else if (this.postingLimit > 0) {
