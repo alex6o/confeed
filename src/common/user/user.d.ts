@@ -1,6 +1,11 @@
 /// <reference path="../common.d.ts"/>
 
 declare module User {
+
+    /**
+     * UserTargetStateService
+     * Basic storage for states and parameters
+     */
     interface IUserTargetStateService {
         /**
          * Store an single state

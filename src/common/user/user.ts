@@ -9,10 +9,7 @@ require("restangular");
 export var ERROR_UNAUTHORIZED = "ERROR_UNAUTHORIZED";
 export var ERROR_AUTHORIZATION_EXPIRED = "ERROR_AUTHORIZATION_EXPIRED";
 
-/**
- * User Service
- * Manages user registration and authentication
- */
+
 export class UserService implements User.IUserService{
     static RESOURCE_LOGIN = "user/login";
     static RESOURCE_SIGNUP = "user/signup";
@@ -142,10 +139,6 @@ export class UserService implements User.IUserService{
 }
 
 
-/**
- * UserTargetStateService
- * Basic storage for states and parameters
- */
 export class UserTargetStateService implements User.IUserTargetStateService {
     private targetState;
     private targetParams;
@@ -260,7 +253,7 @@ export class UserReferenceService {
     }
 
     /**
-     * Remove user data stored on the client side
+     * Removes user data stored on the client side
      */
     resetUser():void {
         this.currentUser = undefined;
@@ -268,7 +261,7 @@ export class UserReferenceService {
     }
 
     /**
-     * Remove user auth token stored on the cliend side
+     * Removes user auth token stored on the cliend side
      */
     resetUserAuthToken():void {
         this.userAuthToken = undefined;
@@ -276,7 +269,7 @@ export class UserReferenceService {
     }
 
     /**
-     * Persist user auth token on the client side
+     * Persists user auth token on the client side
      * @param token user auth token
      */
     persistUserAuthToken(token:string):void {
@@ -286,7 +279,7 @@ export class UserReferenceService {
     }
 
     /**
-     * Persist user data on the client side
+     * Persists user data on the client side
      * @param user user data to persist
      */
     persistUser(user:DTO.IUser):void {
