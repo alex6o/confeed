@@ -1,7 +1,7 @@
 <div id="login-form">
     <form name="loginForm">
         <h2 class="form-login-heading">Login <a data-ui-sref="signup"><i class="fa fa-angle-double-right"></i>
-            Signup</a></h2>
+            Sign up</a></h2>
 
         <div class="alert alert-danger" role="alert" data-ng-show="error">
             <i class="fa fa-exclamation-circle"></i> <strong>Error - </strong><span data-ng-bind="error"></span>
@@ -14,7 +14,9 @@
             <input data-ng-model="user.password" type="password" name="password" id="input-password"
                    class="form-control input-lg" placeholder="Password" required="">
         </div>
-        <button data-ng-click="vm.onClickLogin(loginForm, user)" class="btn btn-lg btn-success btn-block" type="submit">
+        <button data-ng-click="vm.onClickLogin(loginForm, user)"
+                class="btn btn-lg btn-success btn-block"
+                type="submit">
             Login
         </button>
     </form>

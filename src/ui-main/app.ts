@@ -84,7 +84,6 @@ var angularModule = angular.module("cf", moduleDependencies)
     .config(["$stateProvider", "$locationProvider", "$httpProvider", "RestangularProvider",
         ($stateProvider, $locationProvider, $httpProvider, RestangularProvider) => {
 
-            //RestangularProvider.setBaseUrl('http://private-71b1-confeed.apiary-mock.com/');
             RestangularProvider.setBaseUrl('/api/');
             $locationProvider.hashPrefix("!");
 

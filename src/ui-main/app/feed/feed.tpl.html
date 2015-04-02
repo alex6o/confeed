@@ -33,15 +33,19 @@
                         <p data-ng-bind="posting.message"></p>
                     </div>
                     <div class="timeline-posting-date">
-                        <span class="date" data-cf-update-filter="posting.created"
+                        <span class="date"
+                              data-cf-update-filter="posting.created"
                               data-filter-name="'cfTimeFromNow'"></span>
                     </div>
                 </div>
             </div>
         </section>
         <div id="load-more" data-ng-show="feedPostings.length > 0">
-            <button type="button" class="btn btn-link heading" data-ng-click="vm.onClickLoadMore()"
-                    data-ng-show="vm.hasMoreFeedPostings()">Load more ...
+            <button type="button"
+                    class="btn btn-link heading"
+                    data-ng-click="vm.onClickLoadMore()"
+                    data-ng-show="vm.hasMoreFeedPostings()">
+                Load more ...
             </button>
             <h3 class="heading" data-ng-show="!vm.hasMoreFeedPostings()">You have reached the end of this feed!</h3>
         </div>
