@@ -102,6 +102,7 @@ var angularModule = angular.module("cf", moduleDependencies)
     .factory("HateoasRestangular", (Restangular) => {
         // create additional restangular instance
         return Restangular.withConfig((RestangularConfigurer) => {
+            // TODO: replace base url
             RestangularConfigurer.setBaseUrl("http://cf.sa.com/api");
         })
     });
