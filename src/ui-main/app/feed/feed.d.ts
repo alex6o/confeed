@@ -23,6 +23,11 @@ declare module cf {
         resolveInitialFeedPostings():void;
 
         /**
+         * Clamps the array of posting to a configured number of entries
+         */
+        applyPostingLimit():void;
+
+        /**
          * Toggle for limiting the number of listed postings
          */
         togglePostingLimit():void;

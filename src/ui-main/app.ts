@@ -39,7 +39,6 @@ export class AppCtrl {
         this.$rootScope.$on('$stateChangeError', (event, toState, toParams, fromState, fromParams, error) => {
 
             /**
-             * [TODO: AUTH HANDLING]
              * Handle events caused by authentication errors
              */
             // handle unauthorized access
@@ -101,7 +100,7 @@ var angularModule = angular.module("cf", moduleDependencies)
             $httpProvider.interceptors.push("cf_common_userAuthHttpInterceptor");
         }])
     .factory("HateoasRestangular", (Restangular) => {
-        // create additional restangular instance without base url
+        // create additional restangular instance
         return Restangular.withConfig((RestangularConfigurer) => {
             RestangularConfigurer.setBaseUrl("http://cf.sa.com/api");
         })

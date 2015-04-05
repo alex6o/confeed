@@ -103,7 +103,6 @@ class FeedCtrl implements cf.IFeedCtrl {
         this.$scope.feedPostings = [];
         this.$scope.currentUser = this.currentUser;
 
-
         this.resolveInitialFeedPostings();
 
         $interval(() => {
@@ -119,6 +118,8 @@ class FeedCtrl implements cf.IFeedCtrl {
                     _(result.entities).forEach((entry:DTO.IFeedPosting) => {
                         this.$scope.feedPostings.push(entry);
                     }).value();
+
+                    this.applyPostingLimit();
                 }
             },
             (result:restangular.IResponse) => {
@@ -146,17 +147,19 @@ class FeedCtrl implements cf.IFeedCtrl {
                         this.$scope.feedPostings.unshift(entry);
                     }).value();
 
-
-                    if (this.postingLimit > 0) {
-                        this.$scope.feedPostings = _(this.$scope.feedPostings).slice(0, this.postingLimit).valueOf();
-                    }
-
+                    this.applyPostingLimit();
                 }
             },
             (result:restangular.IResponse) => {
                 console.error("Error while fetching posts!");
                 // handle error
             });
+    }
+
+    public applyPostingLimit(){
+        if (this.postingLimit > 0) {
+            this.$scope.feedPostings = _(this.$scope.feedPostings).slice(0, this.postingLimit).valueOf();
+        }
     }
 
     public togglePostingLimit():void {
