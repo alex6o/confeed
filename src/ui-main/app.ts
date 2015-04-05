@@ -40,22 +40,10 @@ export class AppCtrl {
 
             /**
              * Handle events caused by authentication errors
+             * [TODO: Authorization Event Handling]
              */
             // handle unauthorized access
-            if (error === UserImpl.ERROR_UNAUTHORIZED) {
-                // backup target state
-                this.userTargetStateService.pushState(toState, toParams);
-                // redirect user to login
-                $state.go("login");
-            }
-
             // user token has expired
-            if (error === UserImpl.ERROR_AUTHORIZATION_EXPIRED) {
-                // backup target state
-                this.userTargetStateService.pushState(toState, toParams);
-                // redirect user to login
-                $state.go("login");
-            }
         });
 
         // set view model

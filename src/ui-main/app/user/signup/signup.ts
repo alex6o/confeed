@@ -31,20 +31,18 @@ export class SignupCtrl implements cf.ISignupCtrl {
     }
 
     public onClickSubmit(form: ng.IFormController, user: DTO.IRegisterUser): void {
-        if (form.$valid) {
+
+        // [TODO: only submit the form if the form is valid on the client side]
             this.userService.signup(user).then(
-                (result: any) => {
-                    var restoredState = this.userTargetStateService.pullState();
-                    if (!_.isUndefined(restoredState) && !_.isNull(restoredState)) {
-                        this.$state.go(restoredState.name, this.userTargetStateService.pullParams());
-                    } else {
-                        this.$state.go("feed");
-                    }
+                (result:DTO.IUser) => {
+                    // [TODO: Implement state transition]
+                    // Before we redirect the user we have to check if there is another target state stored in our userTargetStateService.
                 },
                 (result:restangular.IResponse) => {
-                    this.$scope.error = result.data.error;
+                    // [TODO: Get the server error from the result (result.data.error)]
+                    // Send the error into scope ($scope.error)
                 });
-        }
+
     }
 }
 
