@@ -11,7 +11,8 @@
                           rows="3"
                           data-ng-model="feedPosting.message"
                           maxlength="{{vm.getPostingCharLimit()}}"
-                          placeholder="Your message for the world"></textarea>
+                          placeholder="Your message for the world"
+                          data-ng-trim="false"></textarea>
             </div>
             <span class="badge badge-info" data-ng-bind="vm.getRemainingCharCount(feedPosting)"></span>
 

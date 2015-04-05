@@ -33,7 +33,7 @@ export class FeedCreateCtrl implements cf.IFeedCreateCtrl {
     public getRemainingCharCount(feedPosting:DTO.IFeedPosting):number {
         var result:number = FeedCreateCtrl.MAX_POSTING_CHARS;
         if (!_.isUndefined(feedPosting) && !_.isUndefined(feedPosting.message)) {
-            result = Math.max(FeedCreateCtrl.MAX_POSTING_CHARS - feedPosting.message.length, 0);
+            result = Math.max(FeedCreateCtrl.MAX_POSTING_CHARS - _.size(feedPosting.message), 0);
         }
         return result;
     }
