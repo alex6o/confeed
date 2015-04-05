@@ -100,7 +100,7 @@ export class UserService implements User.IUserService{
         return this.restangular.one(UserService.RESOURCE_CURRENT_USER, null).get();
     }
 
-    public isAuthorized():ng.IPromise<string> {
+    public isAuthorized():ng.IPromise<DTO.IUser> {
         var deferred = this.$q.defer();
 
         // is an auth token available
@@ -110,7 +110,7 @@ export class UserService implements User.IUserService{
                 // update existing data
                 this.userReferenceService.persistUser(user);
                 // mark as authorized
-                deferred.resolve();
+                deferred.resolve(this.getCurrentUser());
             }, (result:restangular.IResponse) => {
                 // reject depending on response
                 if (result.status === 401) {
@@ -364,9 +364,9 @@ export class UserAuthHttpInterceptor {
 /**
  * Wrapper for usage in state resolve dependency - management
  * @param cf_common_userService
- * @returns {ng.IPromise<string>} {@link UserService.isAuthorized}
+ * @returns {ng.IPromise<DTO.IUser>} {@link UserService.isAuthorized}
  */
-export function loginRequired(cf_common_userService:User.IUserService):ng.IPromise<string> {
+export function loginRequired(cf_common_userService:User.IUserService):ng.IPromise<DTO.IUser> {
     return cf_common_userService.isAuthorized();
 }
 

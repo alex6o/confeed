@@ -4,6 +4,7 @@ declare module cf {
     interface IFeedCreateScope extends IBaseScope {
         feedPosting:DTO.IFeedPosting;
         error:string;
+        currentUser:DTO.IUser;
     }
 
 

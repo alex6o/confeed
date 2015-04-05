@@ -64,10 +64,11 @@ declare module User {
 
         /**
          * Check if the stored user auth token is valid
-         * @returns {ng.IPromise<string>} if the returned promise is resolved the user is authorized otherwise in case
+         * @returns {ng.IPromise<<DTO.IUser>} if the returned promise is resolved (providing the current user) he user
+         * can be considered as authorized, otherwise in case
          * of rejection the user is <code>ERROR_UNAUTHORIZED</code> or <code>ERROR_AUTHORIZATION_EXPIRED</code>
          */
-        isAuthorized():ng.IPromise<string>;
+        isAuthorized():ng.IPromise<DTO.IUser>;
 
         /**
          * Check if auth data is stored on the client
