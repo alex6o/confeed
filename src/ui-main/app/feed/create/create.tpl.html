@@ -6,17 +6,24 @@
                  data-ng-show="error">
                 <i class="fa fa-exclamation-circle"></i> <span data-ng-bind="error"></span>
             </div>
+            <!--
+               TODO: bind the textarea to the message property of the feedPosting object
+               Use the char limit provided by the controller using the getPostingCharLimit method
+            -->
             <div class="form-group">
                 <textarea class="form-control input-lg"
                           rows="3"
-                          data-ng-model="feedPosting.message"
-                          maxlength="{{vm.getPostingCharLimit()}}"
                           placeholder="Your message for the world"></textarea>
             </div>
-            <span class="badge badge-info" data-ng-bind="vm.getRemainingCharCount(feedPosting)"></span>
+            <!--
+              TODO: output the remaining char count (getRemainingCharCount)
+            -->
+            <span class="badge badge-info">180</span>
 
+            <!--
+             TODO: handle the submission of new feed postings (onClickSendFeedPosting)
+            -->
             <button type="submit"
-                    data-ng-click="vm.onClickSendFeedPosting(feedPosting)"
                     class="btn btn-success btn-lg pull-right">
                 <i class="fa fa-paper-plane-o"></i> Send your posting
             </button>

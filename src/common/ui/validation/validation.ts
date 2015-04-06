@@ -18,7 +18,10 @@ export function equalToValidationDirective(): ng.IDirective {
         },
         link: (scope: Ui.IEqualToValidationScope, element: ng.IAugmentedJQuery, attrs: ng.IAttributes, ctrl) => {
             ctrl.$validators.equalTo = (modelValue) => {
-                return modelValue === scope.equalTo;
+                /**
+                 * [TODO: check if the modelValue is equal to the reference scope value provided by equalTo]
+                 */
+                return true;
             };
             scope.$watch("equalTo", () => {
                 ctrl.$validate();

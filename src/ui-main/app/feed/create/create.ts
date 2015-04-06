@@ -33,7 +33,9 @@ export class FeedCreateCtrl implements cf.IFeedCreateCtrl {
     public getRemainingCharCount(feedPosting:DTO.IFeedPosting):number {
         var result:number = FeedCreateCtrl.MAX_POSTING_CHARS;
         if (!_.isUndefined(feedPosting) && !_.isUndefined(feedPosting.message)) {
-            result = Math.max(FeedCreateCtrl.MAX_POSTING_CHARS - feedPosting.message.length, 0);
+            /**
+             * [TODO: calculate the remaining character count]
+             */
         }
         return result;
     }
@@ -49,8 +51,9 @@ export class FeedCreateCtrl implements cf.IFeedCreateCtrl {
         this.feedService.sendFeedPosting(feedPosting).then((result:DTO.IFeedPosting)=> {
             // success handling
             this.$scope.feedPosting = new DTOImpl.FeedPosting();
-            // trigger resolving
-            this.feedCtrl.resolveFeedPostings();
+            /**
+             * [TODO: trigger resolving new postings on the parent ctrl (resolveFeedPostings)]
+             */
 
         }, (result:restangular.IResponse)=> {
             // error handling goes here

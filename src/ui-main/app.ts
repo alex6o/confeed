@@ -84,13 +84,13 @@ var angularModule = angular.module("cf", moduleDependencies)
                 url: ""
             });
 
-            // register authentication interceptor to our app
-            $httpProvider.interceptors.push("cf_common_userAuthHttpInterceptor");
+            /**
+             * [TODO: Register authentication interceptor (cf_common_userAuthHttpInterceptor) to our app]
+             */
         }])
     .factory("HateoasRestangular", (Restangular) => {
         // create additional restangular instance
         return Restangular.withConfig((RestangularConfigurer) => {
-            // TODO: replace base url
-            RestangularConfigurer.setBaseUrl("http://cf.sa.com/api");
+            RestangularConfigurer.setBaseUrl("http://localhost/api");
         })
     });

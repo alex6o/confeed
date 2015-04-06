@@ -115,11 +115,11 @@ class FeedCtrl implements cf.IFeedCtrl {
         this.feedService.getOlderFeedPostings(this.refTimestamp, this.fetchLimit)
             .then((result:DTO.ISearchResult<DTO.IFeedPosting>) => {
                 if (!_.isEmpty(result.entities)) {
-                    _(result.entities).forEach((entry:DTO.IFeedPosting) => {
-                        this.$scope.feedPostings.push(entry);
-                    }).value();
-
-                    this.applyPostingLimit();
+                    /**
+                     * [TODO: add fetched postings to $scope.feedPostings array]
+                     * @see https://lodash.com/docs#forEach
+                     * call the applyPostingLimit method after adding the posts
+                     */
                 }
             },
             (result:restangular.IResponse) => {
@@ -127,7 +127,7 @@ class FeedCtrl implements cf.IFeedCtrl {
                 // handle error
             })
             .finally(()=> {
-                this.resolveFeedPostings();
+                //[TODO: call resolveFeedPostings to get new postings]
             });
     }
 

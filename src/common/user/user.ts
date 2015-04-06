@@ -352,10 +352,11 @@ export class UserAuthHttpInterceptor {
      * @returns {any}
      */
     public request = (config) => {
-        var token:string = this.userReferenceService.getUserAuthToken();
-        if (!_.isUndefined(token) && !_.isNull(token)) {
-            config.headers[UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN] = UserAuthHttpInterceptor.HEADER_AUTHORIZATIONTOKEN_PREFIX + token;
-        }
+        /**
+         * [TODO: Add the auth. token to each request]
+         * Get the token from userReferenceService usign the method getUserAuthToken;
+         * If the is set, add a new header HEADER_AUTHORIZATIONTOKEN containing the token
+         */
         return config;
     };
 }

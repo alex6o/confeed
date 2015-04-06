@@ -2,8 +2,14 @@
     <div class="col-xs-12">
         <p class="welcome-message">
             Hello
-            <span class="username" data-ng-bind="currentUser.username"></span>!
-            <a class="badge badge-info" href="#" data-ng-click="vm.onClickLogout()">Logout</a>
+            <!--
+               TODO: print the username of the current user
+           -->
+            <span class="username">MyAwesomeUsernameGoesHere</span>!
+            <!--
+               TODO: handle logout requests by calling onClickLogout of the controller
+            -->
+            <a class="badge badge-info" href="#">Logout</a>
             <a class="badge badge-info"
                data-ng-class="{'badge-warning': vm.getPostingLimit() === 0}"
                href="#"
@@ -22,32 +28,46 @@
 <div class="row">
     <div class="col-xs-12">
         <section id="timeline">
-            <div class="timeline-block feed-posting" data-ng-repeat="posting in feedPostings">
+            <!--
+               TODO: list postings of feedPostings
+               @see https://docs.angularjs.org/api/ng/directive/ngRepeat
+           -->
+            <div class="timeline-block feed-posting">
                 <div class="timline-user">
-                    <span data-ng-bind="posting.user.username"></span>
+                    <span>Author username goes here!</span>
                 </div>
                 <div class="timeline-img">
                 </div>
                 <div class="timeline-content">
                     <div class="timeline-message">
-                        <p data-ng-bind="posting.message"></p>
+                        <p>The post message</p>
                     </div>
                     <div class="timeline-posting-date">
+                        <!--
+                        TODO: uncomment me with correct variable name :)
                         <span class="date"
                               data-cf-update-filter="posting.created"
                               data-filter-name="'cfTimeFromNow'"></span>
+                        -->
                     </div>
                 </div>
             </div>
         </section>
+
+        <!--
+           TODO: Show if length of feedPostings is > 0
+        -->
         <div id="load-more" data-ng-show="feedPostings.length > 0">
+
+            <!--
+              TODO: use hasMoreFeedPostings provided by the controller to determine if the button should be shown
+              add onClickLoadMore handler to the button.
+           -->
             <button type="button"
-                    class="btn btn-link heading"
-                    data-ng-click="vm.onClickLoadMore()"
-                    data-ng-show="vm.hasMoreFeedPostings()">
+                    class="btn btn-link heading">
                 Load more ...
             </button>
-            <h3 class="heading" data-ng-show="!vm.hasMoreFeedPostings()">You have reached the end of this feed!</h3>
+            <h3 class="heading">You have reached the end of this feed!</h3>
         </div>
     </div>
 </div>
