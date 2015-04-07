@@ -127,6 +127,7 @@ class FeedCtrl implements cf.IFeedCtrl {
                 // handle error
             })
             .then(()=> {
+                debugger;
                 this.resolveFeedPostings();
             });
     }
