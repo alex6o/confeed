@@ -126,7 +126,7 @@ class FeedCtrl implements cf.IFeedCtrl {
                 console.error("Error while fetching posts!");
                 // handle error
             })
-            .finally(()=> {
+            .then(()=> {
                 //[TODO: call resolveFeedPostings to get new postings]
             });
     }
